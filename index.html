@@ -37,30 +37,25 @@ async function send() {
     document.getElementById("output").innerText = "";
 
     try {
-    const res = await fetch("https://bajaj-fsd.onrender.com/bfhl", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ data }),
-        mode: "cors"
-    });
+        const res = await fetch("https://bajaj-fsd.onrender.com/bfhl", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ data })
+        });
 
-    if (!res.ok) {
-        throw new Error("API error");
+        const text = await res.text();
+
+        document.getElementById("status").innerText = "Response received";
+
+        document.getElementById("output").innerText = text;
+
+    } catch (err) {
+        console.error(err);
+        document.getElementById("status").innerText =
+            "Request failed (check console)";
     }
-
-    const json = await res.json();
-
-    document.getElementById("status").innerText = "Successfully Generated Hierarchy";
-
-    document.getElementById("output").innerText =
-        JSON.stringify(json, null, 2);
-
-} catch (err) {
-    document.getElementById("status").innerText =
-        "API not responding yet, try again in a few seconds";
-}
 }
 </script>
 
