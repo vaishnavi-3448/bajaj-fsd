@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bajaj Hierarchy Tool</title>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        textarea {
+            width: 100%;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: black;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #333;
+        }
+        pre {
+            background: white;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Hierarchy Builder</h2>
+
+<textarea id="input">
+A->B,A->C,B->D,C->E,E->F,X->Y,Y->Z,Z->X,P->Q,Q->R,G->H,G->H,G->I,hello,1->2,A->
+</textarea>
+
+<br>
+
+<button onclick="send()">Submit</button>
+
+<pre id="output">Response will appear here...</pre>
+
+<script>
+async function send() {
+    const raw = document.getElementById("input").value;
+
+    const data = raw
+        .split(",")
+        .map(x => x.trim())
+        .filter(x => x.length > 0);
+
+    document.getElementById("output").innerText = "Loading...";
+
+    try {
+        const res = await fetch("http://localhost:3000/bfhl", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ data })
+        });
+
+        const json = await res.json();
+
+        document.getElementById("output").innerText =
+            JSON.stringify(json, null, 2);
+
+    } catch (err) {
+        document.getElementById("output").innerText =
+            "❌ Error connecting to API";
+    }
+}
+</script>
+
+</body>
+</html>
