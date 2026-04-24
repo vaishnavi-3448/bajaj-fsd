@@ -1,51 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Bajaj Hierarchy Tool</title>
-    <style>
-        body {
-            font-family: Arial;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        textarea {
-            width: 100%;
-            height: 120px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            background: black;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #333;
-        }
-        pre {
-            background: white;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-    </style>
+    <title>Hierarchy Builder</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h2>Hierarchy Builder</h2>
+<div class="container">
 
-<textarea id="input">
+    <h1>Hierarchy Builder</h1>
+    <p class="subtitle">Enter node relationships (comma separated)</p>
+
+    <textarea id="input">
 A->B,A->C,B->D,C->E,E->F,X->Y,Y->Z,Z->X,P->Q,Q->R,G->H,G->H,G->I,hello,1->2,A->
-</textarea>
+    </textarea>
 
-<br>
+    <button onclick="send()">Generate Hierarchy</button>
 
-<button onclick="send()">Submit</button>
+    <div id="status"></div>
 
-<pre id="output">Response will appear here...</pre>
+    <pre id="output"></pre>
+
+</div>
 
 <script>
 async function send() {
@@ -56,7 +33,8 @@ async function send() {
         .map(x => x.trim())
         .filter(x => x.length > 0);
 
-    document.getElementById("output").innerText = "Loading...";
+    document.getElementById("status").innerText = "Processing...";
+    document.getElementById("output").innerText = "";
 
     try {
         const res = await fetch("http://localhost:3000/bfhl", {
@@ -69,12 +47,14 @@ async function send() {
 
         const json = await res.json();
 
+        document.getElementById("status").innerText = "Successfully Generated Hierarchy ";
+
         document.getElementById("output").innerText =
             JSON.stringify(json, null, 2);
 
     } catch (err) {
-        document.getElementById("output").innerText =
-            "❌ Error connecting to API";
+        document.getElementById("status").innerText =
+            "❌ Failed to connect to API";
     }
 }
 </script>

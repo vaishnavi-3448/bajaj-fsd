@@ -6,7 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ✅ Validation
+
 function isValidEdge(str) {
     if (!str) return false;
 
@@ -22,7 +22,7 @@ function isValidEdge(str) {
     return true;
 }
 
-// ✅ DFS for tree + cycle detection
+
 function buildTree(node, graph, visited, stack) {
     if (stack.has(node)) {
         return { cycle: true, nodes: new Set(stack) };
@@ -54,7 +54,7 @@ function buildTree(node, graph, visited, stack) {
     };
 }
 
-// ✅ MAIN API
+
 app.post("/bfhl", (req, res) => {
     const data = req.body.data || [];
 
@@ -64,7 +64,7 @@ app.post("/bfhl", (req, res) => {
 
     let edges = [];
 
-    // 🔹 Step 1: validation + duplicates
+    
     data.forEach((item) => {
         if (!isValidEdge(item)) {
             invalid_entries.push(item);
@@ -84,7 +84,7 @@ app.post("/bfhl", (req, res) => {
         edges.push(item);
     });
 
-    // 🔹 Step 2: build graph
+    
     let graph = {};
     let childSet = new Set();
 
@@ -97,7 +97,7 @@ app.post("/bfhl", (req, res) => {
         childSet.add(child);
     });
 
-    // 🔹 Step 3: collect nodes
+    
     let nodes = new Set();
     edges.forEach(e => {
         let [p, c] = e.split("->");
@@ -105,14 +105,14 @@ app.post("/bfhl", (req, res) => {
         nodes.add(c);
     });
 
-    // 🔹 Step 4: find roots
+    
     let roots = [...nodes].filter(n => !childSet.has(n));
 
     if (roots.length === 0 && nodes.size > 0) {
         roots = [[...nodes].sort()[0]];
     }
 
-    // 🔹 Step 5: build hierarchies
+    
     let hierarchies = [];
     let total_trees = 0;
     let total_cycles = 0;
@@ -122,7 +122,7 @@ app.post("/bfhl", (req, res) => {
 
     let processed = new Set();
 
-    // ✅ process roots first
+    
     roots.forEach(root => {
         let visited = new Set();
         let stack = new Set();
@@ -161,7 +161,7 @@ app.post("/bfhl", (req, res) => {
         }
     });
 
-    // ✅ process remaining nodes (cycles/disconnected)
+    
     nodes.forEach(node => {
         if (processed.has(node)) return;
 
@@ -186,7 +186,7 @@ app.post("/bfhl", (req, res) => {
         }
     });
 
-    // 🔹 Final response
+    
     res.json({
         user_id: "vaishnavig_24112005",
         email_id: "vg3448@srmist.edu.in",
@@ -202,7 +202,7 @@ app.post("/bfhl", (req, res) => {
     });
 });
 
-// 🚀 Start server
+
 app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
