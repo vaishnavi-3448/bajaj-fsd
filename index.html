@@ -37,7 +37,7 @@ async function send() {
     document.getElementById("output").innerText = "";
 
     try {
-        const res = await fetch("http://localhost:3000/bfhl", {
+        const res = await fetch("https://bajaj-fsd.onrender.com/", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -54,7 +54,7 @@ async function send() {
 
     } catch (err) {
         document.getElementById("status").innerText =
-            "❌ Failed to connect to API";
+            "Failed to connect to API";
     }
 }
 </script>
