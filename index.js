@@ -6,7 +6,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-
 function isValidEdge(str) {
     if (!str) return false;
 
@@ -21,7 +20,6 @@ function isValidEdge(str) {
 
     return true;
 }
-
 
 function buildTree(node, graph, visited, stack) {
     if (stack.has(node)) {
@@ -54,7 +52,6 @@ function buildTree(node, graph, visited, stack) {
     };
 }
 
-
 app.post("/bfhl", (req, res) => {
     const data = req.body.data || [];
 
@@ -64,7 +61,6 @@ app.post("/bfhl", (req, res) => {
 
     let edges = [];
 
-    
     data.forEach((item) => {
         if (!isValidEdge(item)) {
             invalid_entries.push(item);
@@ -84,7 +80,6 @@ app.post("/bfhl", (req, res) => {
         edges.push(item);
     });
 
-    
     let graph = {};
     let childSet = new Set();
 
@@ -97,7 +92,6 @@ app.post("/bfhl", (req, res) => {
         childSet.add(child);
     });
 
-    
     let nodes = new Set();
     edges.forEach(e => {
         let [p, c] = e.split("->");
@@ -105,14 +99,12 @@ app.post("/bfhl", (req, res) => {
         nodes.add(c);
     });
 
-    
     let roots = [...nodes].filter(n => !childSet.has(n));
 
     if (roots.length === 0 && nodes.size > 0) {
         roots = [[...nodes].sort()[0]];
     }
 
-    
     let hierarchies = [];
     let total_trees = 0;
     let total_cycles = 0;
@@ -122,7 +114,6 @@ app.post("/bfhl", (req, res) => {
 
     let processed = new Set();
 
-    
     roots.forEach(root => {
         let visited = new Set();
         let stack = new Set();
@@ -161,7 +152,6 @@ app.post("/bfhl", (req, res) => {
         }
     });
 
-    
     nodes.forEach(node => {
         if (processed.has(node)) return;
 
@@ -186,7 +176,6 @@ app.post("/bfhl", (req, res) => {
         }
     });
 
-    
     res.json({
         user_id: "vaishnavig_24112005",
         email_id: "vg3448@srmist.edu.in",
@@ -202,7 +191,8 @@ app.post("/bfhl", (req, res) => {
     });
 });
 
+const PORT = process.env.PORT || 3000;
 
-app.listen(3000, () => {
-    console.log("Server running on port 3000");
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
